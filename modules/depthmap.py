@@ -100,13 +100,14 @@ class DepthUtilities:
 class PointCloud:
     #constant lens parameters (from Blender)
     IMG_SIZE     = 720.0    #px
-    FOV          = np.radians(125.0)
+    FOV          = 125.0
     SENSOR_WIDTH = 3.6      #mm. square sensor.
     FOCAL_LENGTH = 2.5      #mm
     #DEPTH_CALIB = #0.918     #adjustment factor for depth (from testing)
     pointCloudCache = None
     pointsOnPlane   = None
-    _slice_mask      = np.zeros((720,720), dtype=np.bool) #used for the overlay
+    _slice_mask      = np.zeros((720,720), dtype=np.bool) #used for the overlay   
+        
     
     @classmethod
     def convertPoint(self, pixel_coords, depth):    
@@ -114,7 +115,7 @@ class PointCloud:
         f_px = self.FOCAL_LENGTH * (self.IMG_SIZE / self.SENSOR_WIDTH)
 
         # Compute the maximum field angle θ_max from the equisolid model
-        theta_max = self.FOV / 2
+        theta_max = np.radians(self.FOV) / 2
 
         # Convert pixel coordinates to normalized image coordinates
         #x = (pixel_coo - (self.IMG_SIZE / 2))
@@ -145,7 +146,7 @@ class PointCloud:
         f_px = self.FOCAL_LENGTH * (depthmap.shape[0] / self.SENSOR_WIDTH)
 
         # Compute the maximum field angle θ_max from the equisolid model
-        theta_max = self.FOV / 2
+        theta_max = np.radians(self.FOV) / 2
 
         # Convert pixel coordinates to normalized image coordinates
         xy = np.mgrid[self.IMG_SIZE / -2:self.IMG_SIZE /2, self.IMG_SIZE / -2:self.IMG_SIZE / 2].transpose(1,2,0)

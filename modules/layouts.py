@@ -358,90 +358,159 @@ class MainInterface ( wx.Frame ):
 class VideoSettings ( wx.Dialog ):
 
     def __init__( self, parent ):
-        wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Video Settings Editor", pos = wx.DefaultPosition, size = wx.Size( 1200,704 ), style = wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER )
+        wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Video Settings Editor", pos = wx.DefaultPosition, size = wx.Size( 1000,770 ), style = wx.DEFAULT_DIALOG_STYLE )
 
         self.SetSizeHints( wx.Size( -1,-1 ), wx.DefaultSize )
 
         s_Trimmer = wx.BoxSizer( wx.VERTICAL )
 
-        fgSizer1 = wx.FlexGridSizer( 0, 2, 0, 0 )
-        fgSizer1.AddGrowableCol( 0 )
-        fgSizer1.AddGrowableCol( 1 )
-        fgSizer1.AddGrowableRow( 1 )
-        fgSizer1.SetFlexibleDirection( wx.BOTH )
-        fgSizer1.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_ALL )
+        s_trimgrid = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, u"Video Trim" ), wx.VERTICAL )
 
-        self.t_Start = wx.StaticText( self, wx.ID_ANY, u"Start Frame", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTER_HORIZONTAL )
+        s_Trim = wx.FlexGridSizer( 0, 2, 0, 0 )
+        s_Trim.AddGrowableCol( 0 )
+        s_Trim.AddGrowableCol( 1 )
+        s_Trim.AddGrowableRow( 1 )
+        s_Trim.SetFlexibleDirection( wx.BOTH )
+        s_Trim.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_ALL )
+
+        s_startheader = wx.BoxSizer( wx.HORIZONTAL )
+
+        self.t_Start = wx.StaticText( s_trimgrid.GetStaticBox(), wx.ID_ANY, u"Start Frame", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTER_HORIZONTAL )
         self.t_Start.Wrap( -1 )
 
-        fgSizer1.Add( self.t_Start, 1, wx.ALIGN_CENTER, 5 )
+        s_startheader.Add( self.t_Start, 1, wx.ALIGN_CENTER, 5 )
 
-        self.t_End = wx.StaticText( self, wx.ID_ANY, u"End Frame", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTER_HORIZONTAL )
+        self.s_TrimStart = wx.SpinCtrl( s_trimgrid.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 200,-1 ), wx.ALIGN_CENTER_HORIZONTAL, 0, 10, 0 )
+        s_startheader.Add( self.s_TrimStart, 1, wx.ALL, 5 )
+
+
+        s_Trim.Add( s_startheader, 1, wx.EXPAND, 5 )
+
+        s_endheader = wx.BoxSizer( wx.HORIZONTAL )
+
+        self.t_End = wx.StaticText( s_trimgrid.GetStaticBox(), wx.ID_ANY, u"End Frame", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTER_HORIZONTAL )
         self.t_End.Wrap( -1 )
 
-        fgSizer1.Add( self.t_End, 1, wx.ALIGN_CENTER, 5 )
+        s_endheader.Add( self.t_End, 1, wx.ALIGN_CENTER_VERTICAL, 5 )
 
-        self.i_TrimStart = wx.StaticBitmap( self, wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.Size( 500,500 ), 0 )
+        self.s_TrimEnd = wx.SpinCtrl( s_trimgrid.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 200,-1 ), wx.ALIGN_CENTER_HORIZONTAL, 0, 10, 0 )
+        s_endheader.Add( self.s_TrimEnd, 1, wx.ALL, 5 )
+
+
+        s_Trim.Add( s_endheader, 1, wx.EXPAND, 5 )
+
+        self.i_TrimStart = wx.StaticBitmap( s_trimgrid.GetStaticBox(), wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.Size( 425,425 ), 0 )
         self.i_TrimStart.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_BTNTEXT ) )
 
-        fgSizer1.Add( self.i_TrimStart, 1, wx.ALIGN_CENTER|wx.SHAPED, 5 )
+        s_Trim.Add( self.i_TrimStart, 1, wx.ALIGN_CENTER_HORIZONTAL|wx.SHAPED, 5 )
 
-        self.i_TrimEnd = wx.StaticBitmap( self, wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.Size( 500,500 ), 0 )
+        self.i_TrimEnd = wx.StaticBitmap( s_trimgrid.GetStaticBox(), wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.Size( 425,425 ), 0 )
         self.i_TrimEnd.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_BTNTEXT ) )
 
-        fgSizer1.Add( self.i_TrimEnd, 1, wx.ALIGN_CENTER|wx.SHAPED, 5 )
+        s_Trim.Add( self.i_TrimEnd, 1, wx.ALIGN_CENTER_HORIZONTAL|wx.SHAPED, 5 )
 
-        self.b_TrimStart = wx.Slider( self, wx.ID_ANY, 0, 0, 100, wx.DefaultPosition, wx.DefaultSize, wx.SL_HORIZONTAL )
-        fgSizer1.Add( self.b_TrimStart, 1, wx.EXPAND, 5 )
+        self.b_TrimStart = wx.Slider( s_trimgrid.GetStaticBox(), wx.ID_ANY, 0, 0, 100, wx.DefaultPosition, wx.DefaultSize, wx.SL_HORIZONTAL )
+        s_Trim.Add( self.b_TrimStart, 1, wx.EXPAND, 5 )
 
-        self.b_TrimEnd = wx.Slider( self, wx.ID_ANY, 100, 0, 100, wx.DefaultPosition, wx.DefaultSize, wx.SL_HORIZONTAL )
-        fgSizer1.Add( self.b_TrimEnd, 1, wx.EXPAND, 5 )
-
-        self.s_TrimStart = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTER_HORIZONTAL|wx.SP_ARROW_KEYS, 0, 10, 0 )
-        fgSizer1.Add( self.s_TrimStart, 1, wx.EXPAND|wx.LEFT|wx.RIGHT, 10 )
-
-        self.s_TrimEnd = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTER_HORIZONTAL|wx.SP_ARROW_KEYS, 0, 10, 0 )
-        fgSizer1.Add( self.s_TrimEnd, 1, wx.EXPAND|wx.LEFT|wx.RIGHT, 10 )
+        self.b_TrimEnd = wx.Slider( s_trimgrid.GetStaticBox(), wx.ID_ANY, 100, 0, 100, wx.DefaultPosition, wx.DefaultSize, wx.SL_HORIZONTAL )
+        s_Trim.Add( self.b_TrimEnd, 1, wx.EXPAND, 5 )
 
 
-        s_Trimmer.Add( fgSizer1, 0, wx.ALL|wx.EXPAND, 5 )
+        s_trimgrid.Add( s_Trim, 0, wx.EXPAND, 5 )
 
-        self.t_trimTitleLine2 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
-        s_Trimmer.Add( self.t_trimTitleLine2, 0, wx.BOTTOM|wx.EXPAND|wx.TOP, 5 )
 
-        bSizer14 = wx.BoxSizer( wx.HORIZONTAL )
+        s_Trimmer.Add( s_trimgrid, 0, wx.ALL|wx.EXPAND, 5 )
 
-        self.t_crop = wx.StaticText( self, wx.ID_ANY, u"Horizontal Offset:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+        s_moreSettings = wx.BoxSizer( wx.HORIZONTAL )
+
+        s_vidBox = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, u"Video Adjustments" ), wx.HORIZONTAL )
+
+        s_vidGrid = wx.GridSizer( 0, 2, 0, 0 )
+
+        self.t_crop = wx.StaticText( s_vidBox.GetStaticBox(), wx.ID_ANY, u"Horizontal Offset:", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.t_crop.Wrap( -1 )
 
-        bSizer14.Add( self.t_crop, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+        s_vidGrid.Add( self.t_crop, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT|wx.ALL, 5 )
 
-        self.b_cropOffset = wx.SpinCtrl( self, wx.ID_ANY, u"0", wx.Point( -1,-1 ), wx.Size( 150,-1 ), wx.ALIGN_CENTER_HORIZONTAL|wx.SP_ARROW_KEYS, -300, 300, 0 )
-        bSizer14.Add( self.b_cropOffset, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+        self.b_cropOffset = wx.SpinCtrl( s_vidBox.GetStaticBox(), wx.ID_ANY, u"0", wx.Point( -1,-1 ), wx.Size( 150,-1 ), wx.ALIGN_CENTER_HORIZONTAL|wx.SP_ARROW_KEYS, -300, 300, 0 )
+        s_vidGrid.Add( self.b_cropOffset, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL|wx.EXPAND, 5 )
 
-
-        bSizer14.Add( ( 0, 0), 1, wx.EXPAND, 5 )
-
-        self.t_zoom = wx.StaticText( self, wx.ID_ANY, u"Zoom:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+        self.t_zoom = wx.StaticText( s_vidBox.GetStaticBox(), wx.ID_ANY, u"Zoom / Crop:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
         self.t_zoom.Wrap( -1 )
 
-        bSizer14.Add( self.t_zoom, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+        s_vidGrid.Add( self.t_zoom, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT|wx.ALL, 5 )
 
-        self.b_zoom = wx.SpinCtrl( self, wx.ID_ANY, u"0", wx.Point( -1,-1 ), wx.Size( 150,-1 ), wx.ALIGN_CENTER_HORIZONTAL|wx.SP_ARROW_KEYS, 0, 250, 0 )
-        bSizer14.Add( self.b_zoom, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
-
-
-        bSizer14.Add( ( 0, 0), 1, wx.EXPAND, 5 )
-
-        self.b_TrimDone = wx.Button( self, wx.ID_ANY, u"Apply Changes", wx.DefaultPosition, wx.DefaultSize, 0 )
-
-        self.b_TrimDone.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_FILE_SAVE, wx.ART_HELP_BROWSER ) )
-        self.b_TrimDone.SetMinSize( wx.Size( 250,-1 ) )
-
-        bSizer14.Add( self.b_TrimDone, 0, wx.ALL|wx.EXPAND, 5 )
+        self.b_zoom = wx.SpinCtrl( s_vidBox.GetStaticBox(), wx.ID_ANY, u"0", wx.Point( -1,-1 ), wx.Size( 150,-1 ), wx.ALIGN_CENTER_HORIZONTAL|wx.SP_ARROW_KEYS, 0, 250, 0 )
+        s_vidGrid.Add( self.b_zoom, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL|wx.EXPAND, 5 )
 
 
-        s_Trimmer.Add( bSizer14, 1, wx.ALL|wx.SHAPED, 5 )
+        s_vidBox.Add( s_vidGrid, 1, 0, 5 )
+
+
+        s_moreSettings.Add( s_vidBox, 1, wx.ALL|wx.EXPAND, 5 )
+
+        s_LensBox = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, u"Lens Calibration" ), wx.VERTICAL )
+
+        s_lensGrid = wx.GridSizer( 0, 2, 0, 0 )
+
+        self.t_fov = wx.StaticText( s_LensBox.GetStaticBox(), wx.ID_ANY, u"FOV (radians)", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.t_fov.Wrap( -1 )
+
+        s_lensGrid.Add( self.t_fov, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT|wx.ALL, 5 )
+
+        self.s_fov = wx.SpinCtrlDouble( s_LensBox.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTER_HORIZONTAL|wx.SP_ARROW_KEYS, 0, 200, 125, 1 )
+        self.s_fov.SetDigits( 1 )
+        s_lensGrid.Add( self.s_fov, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL|wx.EXPAND, 5 )
+
+        self.t_sensorWidth = wx.StaticText( s_LensBox.GetStaticBox(), wx.ID_ANY, u"Sensor Width (mm)", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.t_sensorWidth.Wrap( -1 )
+
+        s_lensGrid.Add( self.t_sensorWidth, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT|wx.ALL, 5 )
+
+        self.s_sensorWidth = wx.SpinCtrlDouble( s_LensBox.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTER_HORIZONTAL|wx.SP_ARROW_KEYS, 0, 10, 3.6, 0.1 )
+        self.s_sensorWidth.SetDigits( 3 )
+        s_lensGrid.Add( self.s_sensorWidth, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL|wx.EXPAND, 5 )
+
+        self.t_focalLength = wx.StaticText( s_LensBox.GetStaticBox(), wx.ID_ANY, u"Focal Length (mm)", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.t_focalLength.Wrap( -1 )
+
+        s_lensGrid.Add( self.t_focalLength, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT|wx.ALL, 5 )
+
+        self.s_focalLength = wx.SpinCtrlDouble( s_LensBox.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTER_HORIZONTAL|wx.SP_ARROW_KEYS, 0, 50, 2.500000, 0.1 )
+        self.s_focalLength.SetDigits( 3 )
+        s_lensGrid.Add( self.s_focalLength, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL|wx.EXPAND, 5 )
+
+
+        s_LensBox.Add( s_lensGrid, 1, wx.EXPAND, 5 )
+
+
+        s_moreSettings.Add( s_LensBox, 1, wx.ALL|wx.EXPAND, 5 )
+
+
+        s_Trimmer.Add( s_moreSettings, 0, wx.EXPAND, 5 )
+
+
+        s_Trimmer.Add( ( 0, 0), 1, wx.EXPAND, 5 )
+
+        s_settingsExit = wx.BoxSizer( wx.HORIZONTAL )
+
+        self.b_settings_reset = wx.Button( self, wx.ID_ANY, u"Reset", wx.DefaultPosition, wx.DefaultSize, 0 )
+
+        self.b_settings_reset.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_UNDO, wx.ART_HELP_BROWSER ) )
+        s_settingsExit.Add( self.b_settings_reset, 1, wx.ALL, 5 )
+
+
+        s_settingsExit.Add( ( 0, 0), 3, wx.EXPAND, 5 )
+
+        self.b_settings_done = wx.Button( self, wx.ID_ANY, u"Apply Changes", wx.DefaultPosition, wx.DefaultSize, 0 )
+
+        self.b_settings_done.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_FILE_SAVE, wx.ART_HELP_BROWSER ) )
+        self.b_settings_done.SetMinSize( wx.Size( 250,-1 ) )
+
+        s_settingsExit.Add( self.b_settings_done, 0, wx.ALL, 5 )
+
+
+        s_Trimmer.Add( s_settingsExit, 0, wx.EXPAND, 5 )
 
 
         self.SetSizer( s_Trimmer )
@@ -451,17 +520,18 @@ class VideoSettings ( wx.Dialog ):
 
         # Connect Events
         self.Bind( wx.EVT_CLOSE, self.doneTrimming )
-        self.b_TrimStart.Bind( wx.EVT_SLIDER, self.updateTrim )
-        self.b_TrimEnd.Bind( wx.EVT_SLIDER, self.updateTrim )
         self.s_TrimStart.Bind( wx.EVT_SPINCTRL, self.updateTrim )
         self.s_TrimEnd.Bind( wx.EVT_SPINCTRL, self.updateTrim )
+        self.b_TrimStart.Bind( wx.EVT_SLIDER, self.updateTrim )
+        self.b_TrimEnd.Bind( wx.EVT_SLIDER, self.updateTrim )
         self.b_cropOffset.Bind( wx.EVT_SPINCTRL, self.updateCrop )
         self.b_cropOffset.Bind( wx.EVT_TEXT, self.updateCrop )
         self.b_cropOffset.Bind( wx.EVT_TEXT_ENTER, self.updateCrop )
         self.b_zoom.Bind( wx.EVT_SPINCTRL, self.updateCrop )
         self.b_zoom.Bind( wx.EVT_TEXT, self.updateCrop )
         self.b_zoom.Bind( wx.EVT_TEXT_ENTER, self.updateCrop )
-        self.b_TrimDone.Bind( wx.EVT_BUTTON, self.doneTrimming )
+        self.b_settings_reset.Bind( wx.EVT_BUTTON, self.resetSettings )
+        self.b_settings_done.Bind( wx.EVT_BUTTON, self.doneTrimming )
 
     def __del__( self ):
         pass
@@ -484,6 +554,9 @@ class VideoSettings ( wx.Dialog ):
 
 
 
+
+    def resetSettings( self, event ):
+        pass
 
 
 

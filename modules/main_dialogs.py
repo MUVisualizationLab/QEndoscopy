@@ -8,7 +8,7 @@ import ctypes
 #sys.path.append("..")
 import modules.layouts as layouts       #all gui views.
 import modules.imaging as QEi     #openCV image processing
-import modules.analysis as QEa   #ML depth analysis
+from modules.analysis import Depthmap as QEa
 import modules.logging as log
 
 
@@ -30,8 +30,15 @@ class settings(layouts.VideoSettings):
         self.s_TrimEnd.SetMax(vid._maxFrame)
         self.s_TrimEnd.SetValue(vid.endFrame)
 
+        #video cropping parameters
         self.b_cropOffset.SetValue(vid.offset)
         self.b_zoom.SetValue(vid.zoom)
+
+        #fisheye parameters
+        fish_fov, fish_width, fish_length = QEa.getLensParams()
+        self.s_fov.SetValue(fish_fov)
+        self.s_sensorWidth.SetValue(fish_width)
+        self.s_focalLength.SetValue(fish_length)
 
         #tweak the interaction behavior
         self.b_zoom.SetIncrement(5)
@@ -85,14 +92,38 @@ class settings(layouts.VideoSettings):
         self.i_TrimStart.SetBitmap(vid.trimmerFrame(self.b_TrimStart.GetValue()))
         self.i_TrimEnd.SetBitmap(vid.trimmerFrame(self.b_TrimEnd.GetValue()))
 
+    def resetSettings(self, event):
+        fish_fov, fish_width, fish_length = QEa.resetLensParams()
+        self.s_fov.SetValue(fish_fov)
+        self.s_sensorWidth.SetValue(fish_width)
+        self.s_focalLength.SetValue(fish_length)
+        
+        vid = QEi.Video
+        QEa.processDepth(vid.imageCache)
+
+
     def doneTrimming(self, event):
         if self.b_TrimStart.GetValue() >= self.b_TrimEnd.GetValue():
             dlg = wx.MessageDialog(None, "Clip start cannot be less than clip end.",'Error',wx.ICON_WARNING|wx.OK)
             dlg.ShowModal()
-            return
+            return        
 
-        #save the values into the vid class
+        #apply fisheye parameters, if any value has changed.
+        fish_fov, fish_width, fish_length = QEa.getLensParams()
+        lensChanged = False
+        if self.s_fov.GetValue() != fish_fov:
+            lensChanged = True
+        if self.s_sensorWidth.GetValue() != fish_width:
+            lensChanged = True
+        if self.s_focalLength.GetValue() != fish_width:
+            lensChanged = True
+
         vid = QEi.Video
+        if lensChanged:
+            QEa.setLensParams(self.s_fov.GetValue(), self.s_sensorWidth.GetValue(), self.s_focalLength.GetValue())   
+            QEa.processDepth(vid.imageCache)
+
+        #save the values into the vid class        
         vid.startFrame = self.b_TrimStart.GetValue()
         vid.endFrame = self.b_TrimEnd.GetValue()
         self.EndModal(wx.ID_OK)
@@ -169,7 +200,7 @@ class saveWizard(layouts.SaveWizard):
         #depth map
         if self.cb_depthmap.IsChecked():
             fullname = f"{self.outputDirectory.GetPath()}\\{self.t_depthmapName.GetValue()}{self.c_depthmapFmt.GetStringSelection()}"
-            QEa.Depthmap.saveDepthMap(fullname) 
+            QEa.saveDepthMap(fullname) 
             saveCounter += 1   
 
         #screenshot
@@ -181,7 +212,7 @@ class saveWizard(layouts.SaveWizard):
         #point cloud
         if self.cb_pointcloud.IsChecked():
             fullname = f"{self.outputDirectory.GetPath()}\\{self.t_pointcloudName.GetValue()}{self.c_pointcloudFmt.GetStringSelection()}"
-            QEa.Depthmap.savePointCloud(fullname)
+            QEa.savePointCloud(fullname)
             saveCounter += 1
         
         #table
@@ -201,19 +232,19 @@ class depthmapViewer(layouts.DepthmapViewer):
     def __init__(self, parent):
         #initialize parent class
         layouts.DepthmapViewer.__init__(self,parent)
-        self.originalColor = QEa.Depthmap.colormap
+        self.originalColor = QEa.colormap
         if self.originalColor != 0:
             self.b_colormap.SetValue(True)
-        self.i_depthmap.SetBitmap(QEa.Depthmap.getImage())
-        info = f"Depthmap Range: {QEa.Depthmap.minmax[0]:.4f} - {QEa.Depthmap.minmax[1]:.4f}"
+        self.i_depthmap.SetBitmap(QEa.getImage())
+        info = f"Depthmap Range: {QEa.minmax[0]:.4f} - {QEa.minmax[1]:.4f}"
         self.t_stats.SetLabelText(info)
 
     def toggleColors( self, event ):
         if self.b_colormap.GetValue() == True:
-            QEa.Depthmap.colormap = self.originalColor
+            QEa.colormap = self.originalColor
         else:
-            QEa.Depthmap.colormap = 0
-        self.i_depthmap.SetBitmap(QEa.Depthmap.getImage())
+            QEa.colormap = 0
+        self.i_depthmap.SetBitmap(QEa.getImage())
 
     def closeViewer( self, event ):
         self.EndModal(wx.ID_OK)

@@ -218,6 +218,24 @@ class Depthmap():
             VispyPCD.updatePoints(dm.PointCloud.pointCloudCache, colorized)
         else:
             VispyPCD.updatePoints(dm.PointCloud.pointCloudCache)
+
+    @classmethod
+    def setLensParams(self, newFOV, newWidth, newLength):    
+        dm.PointCloud.FOV = newFOV
+        dm.PointCloud.SENSOR_WIDTH = newWidth
+        dm.PointCloud.FOCAL_LENGTH = newLength
+
+    @classmethod
+    def getLensParams(self):
+        if self._torchReady == False:
+            global dm
+            import modules.depthmap as dm
+        return dm.PointCloud.FOV, dm.PointCloud.SENSOR_WIDTH, dm.PointCloud.FOCAL_LENGTH
+
+    @classmethod
+    def resetLensParams(self):
+        self.setLensParams(125, 3.6, 2.5)
+        return self.getLensParams()
   
     @classmethod        
     def getImage(self, guiSize=720):
