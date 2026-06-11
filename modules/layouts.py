@@ -160,7 +160,7 @@ class MainInterface ( wx.Frame ):
 
         s_grid2.Add( self.t_rotateX, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, 5 )
 
-        self.slider_planeX = wx.Slider( s_rightcontrols.GetStaticBox(), wx.ID_ANY, 0, -45, 45, wx.DefaultPosition, wx.DefaultSize, wx.SL_VALUE_LABEL )
+        self.slider_planeX = wx.Slider( s_rightcontrols.GetStaticBox(), wx.ID_ANY, 0, -60, 60, wx.DefaultPosition, wx.DefaultSize, wx.SL_VALUE_LABEL )
         self.slider_planeX.SetFont( wx.Font( 8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
 
         s_grid2.Add( self.slider_planeX, 0, wx.EXPAND, 5 )
@@ -170,7 +170,7 @@ class MainInterface ( wx.Frame ):
 
         s_grid2.Add( self.t_rotateY, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, 5 )
 
-        self.slider_planeY = wx.Slider( s_rightcontrols.GetStaticBox(), wx.ID_ANY, 0, -45, 45, wx.DefaultPosition, wx.DefaultSize, wx.SL_VALUE_LABEL )
+        self.slider_planeY = wx.Slider( s_rightcontrols.GetStaticBox(), wx.ID_ANY, 0, -60, 60, wx.DefaultPosition, wx.DefaultSize, wx.SL_VALUE_LABEL )
         self.slider_planeY.SetFont( wx.Font( 8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
 
         s_grid2.Add( self.slider_planeY, 0, wx.EXPAND, 5 )
@@ -453,7 +453,7 @@ class VideoSettings ( wx.Dialog ):
 
         s_lensGrid = wx.GridSizer( 0, 2, 0, 0 )
 
-        self.t_fov = wx.StaticText( s_LensBox.GetStaticBox(), wx.ID_ANY, u"FOV (radians)", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.t_fov = wx.StaticText( s_LensBox.GetStaticBox(), wx.ID_ANY, u"FOV (degrees)", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.t_fov.Wrap( -1 )
 
         s_lensGrid.Add( self.t_fov, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT|wx.ALL, 5 )
