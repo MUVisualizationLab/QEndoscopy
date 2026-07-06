@@ -18,7 +18,7 @@ import wx.grid
 class MainInterface ( wx.Frame ):
 
     def __init__( self, parent ):
-        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Quantitative Endoscopy", pos = wx.DefaultPosition, size = wx.Size( 1600,1000 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Quantitative Endoscopy", pos = wx.DefaultPosition, size = wx.Size( 1600,1000 ), style = wx.DEFAULT_FRAME_STYLE|wx.RESIZE_BORDER|wx.TAB_TRAVERSAL )
 
         self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
         self.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
@@ -358,7 +358,7 @@ class MainInterface ( wx.Frame ):
 class VideoSettings ( wx.Dialog ):
 
     def __init__( self, parent ):
-        wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Video Settings Editor", pos = wx.DefaultPosition, size = wx.Size( 1000,770 ), style = wx.DEFAULT_DIALOG_STYLE )
+        wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Video Settings Editor", pos = wx.DefaultPosition, size = wx.Size( 1000,770 ), style = wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER )
 
         self.SetSizeHints( wx.Size( -1,-1 ), wx.DefaultSize )
 
@@ -660,7 +660,7 @@ class Measurements ( wx.Dialog ):
 class SaveWizard ( wx.Dialog ):
 
     def __init__( self, parent ):
-        wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Batch Exporter", pos = wx.DefaultPosition, size = wx.Size( 599,583 ), style = wx.DEFAULT_DIALOG_STYLE )
+        wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Batch Exporter", pos = wx.DefaultPosition, size = wx.Size( 599,583 ), style = wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER )
 
         self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 
